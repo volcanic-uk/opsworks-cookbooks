@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-opsworks_clockwork "oliver-clockwork" do
-  working_directory "/srv/www/oliver/current"
+opsworks_clockwork "live-clockwork" do
+  working_directory "/srv/www/live/current"
   rails_env "production"
   user "deploy"
   group "www-data"
