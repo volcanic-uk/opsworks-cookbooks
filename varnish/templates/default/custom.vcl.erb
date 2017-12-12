@@ -2,7 +2,7 @@
 
 sub vcl_recv {
     # send all requests to our backend round-robin (brr)
-    if (req.http.host == "www.barkerross.co.uk" || req.http.host == "www.montash.com" || req.http.host == "www.jobcoconut.com" || req.http.host == "www.macgregorblack.com" || req.http.host == "www.cmcconsulting.co.uk" || req.http.host == "www.huntercharles.de" || req.http.host == "www.montashreviews.com" || req.http.host == "www.propelexecutive.com" || req.http.host == "www.careertrotter.de" || req.http.host == "www.achievegroup.com.my" || req.http.host == "www.achievegroup.com.hk" || req.http.host == "www.achievegroup.asia" || req.http.host == "www.fleximums.com" || req.http.host == "www.talentfm.co.uk" || req.http.host == "www.monarchdigital.co.uk" || req.http.host == "www.therecruitmentsolution.co.uk" || req.http.host == "templates.volcanic.uk"){
+    if (req.http.host == "www.barkerross.co.uk" || req.http.host == "www.montash.com" || req.http.host == "www.macgregorblack.com" || req.http.host == "www.cmcconsulting.co.uk" || req.http.host == "www.huntercharles.de" || req.http.host == "www.montashreviews.com" || req.http.host == "www.propelexecutive.com" || req.http.host == "www.careertrotter.de" || req.http.host == "www.achievegroup.com.my" || req.http.host == "www.achievegroup.com.hk" || req.http.host == "www.achievegroup.asia" || req.http.host == "www.fleximums.com" || req.http.host == "www.talentfm.co.uk" || req.http.host == "www.monarchdigital.co.uk" || req.http.host == "www.therecruitmentsolution.co.uk" || req.http.host == "templates.volcanic.uk"){
         set req.backend_hint = brr.backend();
         set req.http.X-High-Performance = "false";
     } else {
