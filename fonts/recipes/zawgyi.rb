@@ -1,3 +1,5 @@
+apt_package 'fontconfig'
+
 directory '/usr/share/font' do
   owner 'root'
   group 'root'
