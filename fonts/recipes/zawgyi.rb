@@ -1,6 +1,6 @@
 apt_package 'fontconfig'
 
-directory '/usr/share/font' do
+directory '/usr/share/fonts' do
   owner 'root'
   group 'root'
   mode '0755'
@@ -10,7 +10,7 @@ end
 execute "download font" do
   command 'wget https://s3.amazonaws.com/oliver-dev/fonts/zawgyi.ttf'
   user "root"
-  cwd '/usr/share/font/'
+  cwd '/usr/share/fonts/'
   not_if { ::File.exists?('/usr/share/font/zawgyi.ttf') }
 end
 
