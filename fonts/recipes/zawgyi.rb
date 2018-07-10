@@ -11,7 +11,7 @@ execute "download font" do
   command 'wget https://s3.amazonaws.com/oliver-dev/fonts/zawgyi.ttf'
   user "root"
   cwd '/usr/share/fonts/'
-  not_if { ::File.exists?('/usr/share/font/zawgyi.ttf') }
+  not_if { ::File.exists?('/usr/share/fonts/zawgyi.ttf') }
 end
 
 execute "refresh font cache" do
