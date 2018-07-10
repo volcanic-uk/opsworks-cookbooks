@@ -1,6 +1,7 @@
 execute "download font" do
-  command 'wget -O /usr/share/font/zawgyi.ttf https://s3.amazonaws.com/oliver-dev/fonts/zawgyi.ttf'
+  command 'wget https://s3.amazonaws.com/oliver-dev/fonts/zawgyi.ttf'
   user "root"
+  cwd '/usr/share/font/'
   not_if File.exists?('/usr/share/font/zawgyi.ttf')
 end
 
