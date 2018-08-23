@@ -102,7 +102,7 @@ sub vcl_backend_response {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cookie;
         set beresp.http.Cache-Control = "public";
-        set beresp.ttl = 7200s; # 2h in cache 
+        set beresp.ttl = 14400s; # 4h in cache 
         set beresp.grace = 864000s; # 10 days grace period
     }
     
