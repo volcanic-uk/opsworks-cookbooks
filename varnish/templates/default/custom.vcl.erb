@@ -13,6 +13,10 @@ sub vcl_recv {
     set req.backend_hint = hp_brr.backend();
     set req.http.X-High-Performance = "true";
 
+    if (req.http.X-Forwarded-Host && req.http.X-Forwarded-Host != req.http.Host){
+        unset req.http.X-Forwarded-Host;
+    }
+
     # store requested url for returning later
     set req.http.X-Varnish-Url = req.url;
 
