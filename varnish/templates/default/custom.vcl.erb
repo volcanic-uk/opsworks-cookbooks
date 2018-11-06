@@ -94,7 +94,7 @@ sub vcl_backend_fetch {
 
 sub vcl_backend_response {
 
-    if (beresp.status >= 500) {
+    if (beresp.status >= 500 && !(bereq.url ~ "^\/api\/")) {
        # the failing backend is blacklisted and we try to fetch content from another server
        saintmode.blacklist(5s);
        return (retry);
