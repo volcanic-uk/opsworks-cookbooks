@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Restart shoryuken workers service if memory is low
+
+if (( $(awk '/MemFree/{free=$2} /MemTotal/{total=$2} END{print ((free*100)/total < 10)}' /proc/meminfo) )); then
+  /usr/sbin/service shoryuken-workers-<%= @application %> restart
+fi
