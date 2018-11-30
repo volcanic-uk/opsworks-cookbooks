@@ -1,7 +1,13 @@
 #!/bin/bash
 #
 # Restart shoryuken workers service if memory is low
+exec 1> >(logger -s -t $(basename $0)) 2>&1
 
-if (( $(awk '/MemFree/{free=$2} /MemTotal/{total=$2} END{print ((free*100)/total < 10)}' /proc/meminfo) )); then
+freemem=$(/usr/bin/awk '/MemFree/{free=$2} /MemTotal/{total=$2} END{print (free*100)/total}' /proc/meminfo)
+echo "Free memory is at $freemem%"
+
+if (( $(echo "$freemem < 10.0" |bc -l) ))
+then
+  echo "Restarting shoryuken..."
   /usr/sbin/service shoryuken-workers-<%= @application %> restart
 fi

@@ -2,6 +2,7 @@ node[:deploy].each do |application, deploy|
   template "/srv/www/#{application}/shared/scripts/shoryuken-restart.sh" do
     source "shoryuken-restart.sh.erb"
     owner "deploy"
+    group "www-data"
     mode 0755
     variables({
       application: application
