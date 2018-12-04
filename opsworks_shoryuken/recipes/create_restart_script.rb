@@ -11,6 +11,6 @@ node[:deploy].each do |application, deploy|
   
   cron "shoryuken-workers-#{application}-restart" do
     minute  '*/5'
-    command "/srv/www/#{application}/shared/scripts/shoryuken-restart.sh"
+    command "/srv/www/#{application}/shared/scripts/shoryuken-restart.sh >/dev/null 2>&1"
   end
 end
