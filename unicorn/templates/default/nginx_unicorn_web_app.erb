@@ -16,6 +16,8 @@ server {
   server_name  <%= @application[:domains].join(" ") %> <%= node[:hostname] %>;
   <% end %>
 
+  access_log  <%= node[:nginx][:log_dir] %>/access.log upstream_time;
+
   server_tokens off;
 
   keepalive_timeout 5;
