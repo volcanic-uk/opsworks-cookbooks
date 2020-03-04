@@ -55,7 +55,7 @@ http {
 
   log_format upstream_time '$remote_addr - $remote_user [$time_local] '
                              '"$request" $status $body_bytes_sent '
-                             'rt=$request_time uct="$upstream_connect_time" ttfb="$upstream_header_time" ttlb="$upstream_response_time" urid="$upstream_http_x_request_id" host="$http_host"';
+                             'rt=$request_time ttlb="$upstream_response_time" urid="$upstream_http_x_request_id" host="$http_host"';
 
   include <%= node[:nginx][:dir] %>/conf.d/*.conf;
   include <%= node[:nginx][:dir] %>/sites-enabled/*;
