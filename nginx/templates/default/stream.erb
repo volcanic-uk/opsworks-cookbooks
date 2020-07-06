@@ -1,0 +1,10 @@
+stream {
+    server {
+        listen 80;
+        proxy_pass cloudfront.volcanic.jobs:80;
+    }
+    server {
+        listen 443;
+        proxy_pass cloudfront.volcanic.jobs:443;
+    }
+}

@@ -14,8 +14,14 @@
 
 description "Shoryuken Upstart process"
 
-start on started network-services
-stop on stopping network-services
+
+# This script is not meant to start on bootup, shoryuken-workers.conf
+# will start all shoryuken instances explicitly when it starts.
+#start on started network-services
+#stop on stopping network-services
+
+# Define an instance stanza so we can run multiple processes
+instance $index
 
 # change to match your deployment user
 setuid <%= @user %>

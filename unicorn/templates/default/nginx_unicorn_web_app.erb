@@ -16,13 +16,9 @@ server {
   server_name  <%= @application[:domains].join(" ") %> <%= node[:hostname] %>;
   <% end %>
 
-  <% if @application[:log_format] %>
-    <% @application[:log_format].each do |log_format_name| %>
-  access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.<%= log_format_name %>.log <%= log_format_name %>;
-    <% end %>
-  <% else %>
-  access_log <%= node[:nginx][:log_dir] %>/<%= @application[:domains].first %>.access.log;
-  <%end %>
+  access_log  <%= node[:nginx][:log_dir] %>/access.log upstream_time;
+
+  server_tokens off;
 
   keepalive_timeout 5;
 
@@ -46,8 +42,9 @@ server {
         add_header Cache-Control "public";
       }
 
-      location ~* /(production|staging|assets|javascripts|chosen)/.*.(jpg|jpeg|png|gif|svg|ico|css|js)$ {
+      location ~* ^\/(production|staging|assets|javascripts|chosen)\/.*.(jpg|jpeg|png|gif|svg|ico|css|js)$ {
         expires 1y;
+        add_header Access-Control-Allow-Origin *;
         add_header Cache-Control "public";
         break;
       }

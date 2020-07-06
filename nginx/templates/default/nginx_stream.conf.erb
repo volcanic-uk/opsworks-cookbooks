@@ -1,0 +1,19 @@
+worker_processes  1;  ## Default: 1
+error_log  /var/log/error.log;
+pid        /var/run/nginx.pid;
+worker_rlimit_nofile 8192;
+
+events {
+  worker_connections  1024;  ## Default: 1024
+}
+
+stream {
+    server {
+        listen 80;
+        proxy_pass cloudfront.volcanic.jobs:80;
+    }
+    server {
+        listen 443;
+        proxy_pass cloudfront.volcanic.jobs:443;
+    }
+}

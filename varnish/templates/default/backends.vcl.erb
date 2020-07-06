@@ -20,6 +20,25 @@ backend server<%= index + 1 %> {
 
 <% end %>
 
+<% hp_server_count = @hp_servers.size %>
+<% @hp_servers.each_with_index do |node, index| %>
+backend hp_server<%= index + 1 %> {
+  .host = "<%= node[:private_ip] %>";
+  .port = "80";
+  .connect_timeout = 2s; # Wait a maximum of 1s for backend connection
+  .first_byte_timeout = 5s; # Wait a maximum of 5s for the first byte to come from your backend
+  .between_bytes_timeout = 20s; # Wait a maximum of 20s between each bytes sent
+  .probe = {
+    .url = "/health";
+    .timeout = 2s;
+    .interval = 10s;
+    .window = 5;
+    .threshold = 3;
+  }
+}
+
+<% end %>
+
 sub vcl_init {
     # set up each server for saintmode
     <% [*1..server_count].each do |x| %>
@@ -31,10 +50,18 @@ sub vcl_init {
     <% [*1..server_count].each do |x| %>
     brr.add_backend(sm<%= x %>.backend());
     <% end %>
-}
 
 
-acl purgers {
-    "127.0.0.1";
-    "86.155.199.228";
+
+    # set up each high performance server for saintmode
+    <% [*1..hp_server_count].each do |x| %>
+    new hp_sm<%= x %> = saintmode.saintmode(hp_server<%= x %>, 10);
+    <% end %>
+    # add saintmoded high performance backends to round_robin director
+    new hp_brr = directors.round_robin();
+
+    <% [*1..hp_server_count].each do |x| %>
+    hp_brr.add_backend(hp_sm<%= x %>.backend());
+    <% end %>
 }
+

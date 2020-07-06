@@ -1,0 +1,37 @@
+import directors;
+import saintmode;
+
+
+
+<% hp_server_count = node[:varnish][:production_hosts].size %>
+<% node[:varnish][:production_hosts].each_with_index do |node, index| %>
+backend hp_server<%= index + 1 %> {
+  .host = "<%= node %>";
+  .port = "80";
+  .connect_timeout = 2s; # Wait a maximum of 1s for backend connection
+  .first_byte_timeout = 5s; # Wait a maximum of 5s for the first byte to come from your backend
+  .between_bytes_timeout = 20s; # Wait a maximum of 20s between each bytes sent
+  .probe = {
+    .url = "/health";
+    .timeout = 2s;
+    .interval = 10s;
+    .window = 5;
+    .threshold = 3;
+  }
+}
+
+<% end %>
+
+sub vcl_init {
+    # set up each high performance server for saintmode
+    <% [*1..hp_server_count].each do |x| %>
+    new hp_sm<%= x %> = saintmode.saintmode(hp_server<%= x %>, 10);
+    <% end %>
+    # add saintmoded high performance backends to round_robin director
+    new hp_brr = directors.round_robin();
+
+    <% [*1..hp_server_count].each do |x| %>
+    hp_brr.add_backend(hp_sm<%= x %>.backend());
+    <% end %>
+}
+

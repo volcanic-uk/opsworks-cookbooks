@@ -2,25 +2,21 @@
 
 sub vcl_recv {
     # send all requests to our backend round-robin (brr)
-    # if (req.http.host == "www.cmcconsulting.co.uk" || req.http.host == "www.huntercharles.de"){
+    # if (req.http.host == "www.twentyrecruitment.com" || req.http.host == "www.barkerross.co.uk" || req.http.host == "www.montash.com" || req.http.host == "www.jobcoconut.com" || req.http.host == "www.macgregorblack.com" || req.http.host == "careers.autorestore.co.uk" || req.http.host == "www.cmcconsulting.co.uk" || req.http.host == "www.huntercharles.de" || req.http.host == "www.hshcr.com" || req.http.host == "www.montashreviews.com" || req.http.host == "www.propelexecutive.com" || req.http.host == "www.careertrotter.de" || req.http.host == "www.achievegroup.com.my" || req.http.host == "www.achievegroup.com.hk" || req.http.host == "www.achievegroup.asia" || req.http.host == "www.venquis.de" || req.http.host == "www.fleximums.com" || req.http.host == "www.talentfm.co.uk" || req.http.host == "www.monarchdigital.co.uk" || req.http.host == "www.therecruitmentsolution.co.uk" || req.http.host == "templates.volcanic.uk"){
     #     set req.backend_hint = brr.backend();
     #     set req.http.X-High-Performance = "false";
     # } else {
-    #     set req.backend_hint = hp_brr.backend();
-    #     set req.http.X-High-Performance = "true";
+        # set req.backend_hint = hp_brr.backend();
+        # set req.http.X-High-Performance = "true";
     # }
 
     set req.backend_hint = hp_brr.backend();
     set req.http.X-High-Performance = "true";
 
-    if (req.http.X-Forwarded-Host && req.http.X-Forwarded-Host != req.http.Host){
-        unset req.http.X-Forwarded-Host;
-    }
-
     # store requested url for returning later
     set req.http.X-Varnish-Url = req.url;
 
-    set req.http.X-Forwarded-Proto = req.http.CloudFront-Forwarded-Proto;
+    # set req.http.X-Forwarded-Proto = req.http.CloudFront-Forwarded-Proto;
 
     if (req.method == "BAN") {
         ban("req.http.host == " + req.http.host);
@@ -94,13 +90,13 @@ sub vcl_backend_fetch {
 
 sub vcl_backend_response {
 
-    if (beresp.status >= 500 && !(bereq.url ~ "^\/api\/")) {
+    if (beresp.status >= 500) {
        # the failing backend is blacklisted and we try to fetch content from another server
        saintmode.blacklist(5s);
        return (retry);
     }
 
-    if (beresp.http.X-Do-Not-Cache == "true" || bereq.url ~ "^\/users\/auth\/[a-z_-]*\/callback" || bereq.http.X-Varnish-Cache == "pass" || beresp.http.Content-Type ~ "json" || beresp.http.Content-Type ~ "xml" || beresp.http.Content-Type ~ "plain" || beresp.status == 429 || beresp.status == 403) {
+    if (beresp.http.X-Do-Not-Cache == "true" || bereq.url ~ "^\/users\/auth\/[a-z_-]*\/callback" || bereq.http.X-Varnish-Cache == "pass" || beresp.http.Content-Type ~ "json" || beresp.http.Content-Type ~ "xml" || beresp.status == 429 || beresp.status == 403) {
         set beresp.uncacheable = true;
     } else {
         unset beresp.http.Set-Cookie;
@@ -170,6 +166,8 @@ sub vcl_deliver {
     set resp.http.Cache-Control = "private, no-cache";
     set resp.http.X-CF-Passed-Proto = req.http.CloudFront-Forwarded-Proto;
     set resp.http.X-High-Performance = req.http.X-High-Performance;
+    set resp.http.X-Cerberus = "true";
+    set resp.http.X-Forwarded-Proto = req.http.X-Forwarded-Proto;
     unset resp.http.X-Powered-By;
     unset resp.http.Server;
 }

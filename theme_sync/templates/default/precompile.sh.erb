@@ -18,7 +18,7 @@ rsync -arvce "ssh -o StrictHostKeyChecking=no" --delete deploy@<%= node[:theme_s
 
 # RUN PRECOMPILE
 cd /srv/www/precompile_app/current
-RAILS_ENV=production THEME_NAME=$1 MODE=$2 bundle exec rake assets:clean
+RAILS_ENV=production THEME_NAME=$1 MODE=$2 bundle exec rake assets:clobber
 RAILS_ENV=production THEME_NAME=$1 MODE=$2 DEPLOY_SERVER=true bundle exec rake assets:precompile
 
 # MOVE PRECOMPILED ASSETS TO /deploy_themes/precompiled_assets
