@@ -6,8 +6,8 @@ template "/etc/varnish/backends.vcl" do
   owner 'root'
   # group 
   source "backends.vcl.erb"
-  variables(:servers => search(:node, "layers:public"), :hp_servers => search(:node, 'layers:high_performance_private'))
-  # variables(:servers => search(:node, "layers:public"), :hp_servers => (search(:node, 'layers:high_performance_private').to_a + extra_ips))
+  # variables(:servers => search(:node, "layers:public"), :hp_servers => search(:node, 'layers:high_performance_private'))
+  variables(:servers => search(:node, "layers:public"), :hp_servers => (search(:node, 'layers:high_performance_private').to_a + extra_ips))
 end
 
 template "/etc/varnish/custom.vcl" do
