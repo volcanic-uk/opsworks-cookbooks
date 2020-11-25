@@ -1,4 +1,5 @@
-extra_ips = node[:varnish].map{|e| {:private_ip => e} }
+extra_ips = []
+extra_ips = node[:varnish][:server_ips].map{|e| {:private_ip => e} } if !node[:varnish][:server_ips].nil?
 
 template "/etc/varnish/backends.vcl" do
   mode '0755'
