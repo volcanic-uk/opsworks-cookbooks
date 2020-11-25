@@ -23,3 +23,5 @@ doc/
 .kitchen.local.yml
 opsworks.json
 build
+
+.DS_Store
